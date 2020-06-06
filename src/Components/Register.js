@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import { withRouter } from "react-router";
 import firebase from "../firebase";
-
+import styles from "./style.module.css";
+import { Link } from "react-router-dom";
 const Register = ({ history }) => {
   const handleRegister = useCallback(
     async (event) => {
@@ -21,18 +22,39 @@ const Register = ({ history }) => {
   );
 
   return (
-    <div>
-      <h1>Register</h1>
+    <div className={styles.logincontainer}>
+      <h1>REGISTER</h1>
+      <div className={styles.user}>
+        <i className="fas fa-user-plus"></i>
+      </div>
       <form onSubmit={handleRegister}>
-        <label>
-          Email
-          <input name="email" type="email" placeholder="Email" />
-        </label>
-        <label>
-          Password
-          <input name="password" type="password" placeholder="Password" />
-        </label>
-        <button type="submit">Register</button>
+        <div className={styles.inputfields}>
+          <label>
+            <i className="fas fa-envelope"></i>
+            <input name="email" type="email" placeholder="Enter Email" />
+          </label>
+        </div>
+
+        <div className={styles.inputfields}>
+          <label>
+            <i className="fas fa-lock"></i>
+            <input
+              name="password"
+              type="password"
+              placeholder="Enter Password"
+            />
+          </label>
+        </div>
+
+        <button type="submit" className={styles.regbtn}>
+          REGISTER
+        </button>
+        <p>
+          Already Registered..?{" "}
+          <span className={styles.linkstyle}>
+            <Link to="/login">LOGIN</Link>
+          </span>
+        </p>
       </form>
     </div>
   );

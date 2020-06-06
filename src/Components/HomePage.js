@@ -4,8 +4,8 @@ import firebase from "../firebase";
 const Homepage = () => {
   return (
     <div>
-      <h1>Homepage</h1>
       <button onClick={() => firebase.auth().signOut()}>Sign Out</button>
+      <h1>Quiz Page</h1>
     </div>
   );
 };
