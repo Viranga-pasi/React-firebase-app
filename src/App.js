@@ -14,9 +14,10 @@ const App = () => {
     <AuthProvider>
       <Router>
         <div>
-          <PrivateRoute exact path="/" component={HomePage} />
-          <Route exact path="./login" component={Login} />
-          <Route exact path="./register" component={Register} />
+          <PrivateRoute exact path="/" render={() => <HomePage />} />
+          {/* <PrivateRoute exact path="/" component={HomePage} /> */}
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
         </div>
       </Router>
     </AuthProvider>
