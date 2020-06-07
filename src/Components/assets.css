@@ -1,0 +1,92 @@
+.container {
+  background-color: #2b2b2b;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  color: white;
+  text-align: center;
+}
+
+h1,
+h2 {
+  margin: 10px;
+  color: #f4f4f4;
+}
+
+.answer {
+  border: 3px solid #017ab3;
+  background-color: #017ab3;
+  padding: 5px 10px 5px 45px;
+  width: 610px;
+  text-align: left;
+  margin-top: 10px;
+  position: relative;
+  font-size: 22px;
+  cursor: pointer;
+  transition: ease-in-out, width 0.35s ease-in-out;
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+.answer.selected {
+  color: #4f4c4c;
+  background-color: #c8ffbb;
+}
+
+.answer:hover {
+  color: #017ab3;
+  background-color: #ffffff;
+}
+
+.answer:focus {
+  outline: none;
+}
+
+.results span.correct {
+  color: #c8ffbb;
+}
+
+.results span.failed {
+  color: #f27c7c;
+}
+
+.error {
+  color: #f27c7c;
+}
+
+.letter {
+  color: #000000;
+  width: 30px;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  height: 28px;
+  top: 0;
+  padding: 5px;
+  text-transform: uppercase;
+}
+
+.btn {
+  color: #4f4c4c;
+  background-color: #f4f4f4;
+  padding: 10px 50px;
+  text-transform: uppercase;
+  font-size: 18px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.btn-primary {
+  color: #4f4c4c;
+  background-color: #ffc107;
+  font-weight: bold;
+  border: 3px solid #ffc107;
+}
+.btn-primary:hover {
+  color: #ffc107;
+  background-color: #ffffff;
+}

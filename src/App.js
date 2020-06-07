@@ -9,7 +9,7 @@ import Register from "./Components/Register";
 import { AuthProvider } from "./Components/Auth";
 import PrivateRoute from "./Components/PrivateRoute";
 
-const App = () => {
+function App() {
   return (
     <AuthProvider>
       <Router>
@@ -22,6 +22,6 @@ const App = () => {
       </Router>
     </AuthProvider>
   );
-};
+}
 
 export default App;
