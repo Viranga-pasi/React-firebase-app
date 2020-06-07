@@ -23,4 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # add firebase
-/src/firebase.js
+src/firebase.js

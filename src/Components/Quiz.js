@@ -7,17 +7,15 @@ import "./assets.css";
 const Quiz = () => {
   const [qdata, setQdata] = useState([]);
 
-  const [questions, setQuestions] = useState({ quiz: "" });
-  console.log("data from database", qdata);
+  //   const [questions, setQuestions] = useState({ quiz: "" });
+  console.log(qdata);
   //   console.log("each", questions[0].quiz);
 
   useEffect(() => {
     const fetchData = async () => {
       const db = firebase.firestore();
       const data = await db.collection("questions_db").get();
-      // setQuestions(
-      //   data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      // );
+
       setQdata(data.docs.map((doc) => doc.data()));
       //   setQuestions(qdata.map((questions) => questions.quiz()));
     };
@@ -26,7 +24,9 @@ const Quiz = () => {
 
   // setQuestions(qdata.map((questions) => questions.quiz));
 
-  //const question = questions[0].quiz;
+  let question = [];
+  question.map((qdata) => qdata.quiz);
+  console.log(question[0]);
 
   return (
     <div className="container">
@@ -54,7 +54,7 @@ const Quiz = () => {
       <button onClick={load}>Next</button> */}
       </div>
 
-      <Progress total="3" current="1" />
+      <Progress total={qdata.length} current="1" />
       <Questions question={"What is react"} />
       <Answers />
     </div>
