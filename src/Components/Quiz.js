@@ -6,57 +6,88 @@ import Answers from "./Quiz/Answers";
 import "./assets.css";
 const Quiz = () => {
   const [qdata, setQdata] = useState([]);
-
-  //   const [questions, setQuestions] = useState({ quiz: "" });
-  console.log(qdata);
-  //   console.log("each", questions[0].quiz);
-
+  // console.log(qdata.length);
   useEffect(() => {
     const fetchData = async () => {
       const db = firebase.firestore();
       const data = await db.collection("questions_db").get();
 
       setQdata(data.docs.map((doc) => doc.data()));
-      //   setQuestions(qdata.map((questions) => questions.quiz()));
     };
     fetchData();
   }, []);
 
-  // setQuestions(qdata.map((questions) => questions.quiz));
+  const [currentQuestion, serCurrentQuestion] = useState(0);
+  const [currentAnswer, serCurrentAnswer] = useState(" ");
+  const [answers, setAnswers] = useState([]);
+  const [error, setError] = useState(" ");
 
-  let question = [];
-  question.map((qdata) => qdata.quiz);
-  console.log(question[0]);
+  //get database to an object
+  const questionArray = {
+    question: qdata.map((q) => q.quiz),
+    a: qdata.map((q) => q.ans1),
+    b: qdata.map((q) => q.ans2),
+    c: qdata.map((q) => q.ans3),
+    d: qdata.map((q) => q.ans4),
+  };
+
+  // console.log(questionArray.question[currentQuestion]);
+
+  const handleClick = (e) => {
+    serCurrentAnswer(e.target.value);
+  };
+
+  //create  next function
+  const next = () => {
+    const answer = {
+      questionId: currentQuestion,
+      answer: currentAnswer,
+    };
+    answers.push(answer);
+    setAnswers(answers);
+
+    console.log(answer);
+
+    if (!currentAnswer) {
+      setError("Please Select an Answer");
+      return;
+    }
+
+    serCurrentAnswer(" ");
+    if (currentQuestion + 1 < qdata.length) {
+      serCurrentQuestion(currentQuestion + 1);
+      return;
+    }
+  };
+
+  //check user response
+  const renderError = () => {
+    if (!error) {
+      return;
+    }
+    return <div className="error">{error}</div>;
+  };
 
   return (
     <div className="container">
-      <div>
-        {/* <ol>
-        {questions.map((question) => (
-          <li key={question.quiz}>
-            {question.quiz}
-            <ol key={question.ans}>
-              <li>{question.ans1}</li>
-              <li>{question.ans2}</li>
-              <li>{question.ans3}</li>
-              <li>{question.ans4}</li>
-              <input
-                value={answer}
-                onChange={(e) => {
-                  setAnswer(e.target.value);
-                }}
-                placeholder="Enter Answer"
-              />
-            </ol>
-          </li>
-        ))}
-      </ol>
-      <button onClick={load}>Next</button> */}
-      </div>
+      <Progress total={qdata.length} current={currentQuestion + 1} />
+      <hr />
+      <Questions
+        questionSet={questionArray}
+        currentQuestion={currentQuestion}
+      />
 
-      <Progress total={qdata.length} current="1" />
-      <Questions question={"What is react"} />
-      <Answers />
+      <Answers
+        currentQuestion={currentQuestion}
+        question={questionArray}
+        currentAnswer={currentAnswer}
+        handleClick={handleClick}
+      />
+
+      {renderError()}
+      <button className="btn btn-primary" onClick={next}>
+        Next Question
+      </button>
     </div>
   );
 };

@@ -3,12 +3,30 @@ import Answer from "./Answer";
 function Answers(props) {
   return (
     <>
-      <Answer letter="A" answer="Framework" />
-      <Answer letter="B" answer="Angular" />
-      <Answer letter="C" answer="Javascript" />
-      <Answer letter="D" answer="HTML" />
-
-      <button className="btn btn-primary">Comfirm and Continue</button>
+      <Answer
+        letter="a"
+        answer={props.question.a[props.currentQuestion]}
+        selected={props.currentAnswer === "a"}
+        handleClick={props.handleClick}
+      />
+      <Answer
+        letter="b"
+        answer={props.question.b[props.currentQuestion]}
+        selected={props.currentAnswer === "b"}
+        handleClick={props.handleClick}
+      />
+      <Answer
+        letter="c"
+        answer={props.question.c[props.currentQuestion]}
+        selected={props.currentAnswer === "c"}
+        handleClick={props.handleClick}
+      />
+      <Answer
+        letter="d"
+        answer={props.question.d[props.currentQuestion]}
+        selected={props.currentAnswer === "d"}
+        handleClick={props.handleClick}
+      />
     </>
   );
 }

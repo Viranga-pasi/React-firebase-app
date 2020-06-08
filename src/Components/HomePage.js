@@ -7,7 +7,7 @@ import { AuthContext } from "./Auth.js";
 const Homepage = () => {
   function logout() {
     firebase.auth().signOut();
-    console.log("logout");
+    //console.log("logout");
   }
   const { currentUser } = useContext(AuthContext);
 
@@ -18,7 +18,7 @@ const Homepage = () => {
   return (
     <div>
       <div className="navbar">
-        <h1 className="heading">Question App</h1>
+        <h1 className="heading">Question App with react + Firebase</h1>
         <button onClick={() => logout()} className="hbtn">
           Sign Out
         </button>
