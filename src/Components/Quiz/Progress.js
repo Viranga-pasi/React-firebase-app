@@ -3,7 +3,7 @@ import React from "react";
 function Progress(props) {
   return (
     <h4>
-      Question {props.current} of {props.total}
+      QUESTION {props.current} OF {props.total}
     </h4>
   );
 }

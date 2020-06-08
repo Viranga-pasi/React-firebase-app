@@ -1,4 +1,6 @@
 .navbar {
+  margin-top: 10px;
+  margin-bottom: 10px;
   display: flex;
   width: 90%;
   margin-left: auto;

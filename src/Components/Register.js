@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // import React, { useCallback, useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import firebase from "../firebase";
@@ -23,22 +23,13 @@ const Register = ({ history }) => {
     [history]
   );
 
-  // const [user, setUser] = useState([]);
-  // const [newUser, setNewUser] = React.useState("");
+  const [newUser, setNewUser] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const userdb = firebase.firestore();
-  //     const data = await userdb.collection("user_details").get();
-  //     setUser(data.docs.map((doc) => doc.data()));
-  //   };
-  //   fetchData();
-  // }, []);
-
-  // function onCreate() {
-  //   const db = firebase.firestore();
-  //   db.collection("user_details").add({ email: newUser });
-  // }
+  console.log(newUser);
+  function onCreate() {
+    const db = firebase.firestore();
+    db.collection("user_details").add({ email: newUser });
+  }
 
   return (
     <div className="logincontainer">
@@ -46,8 +37,8 @@ const Register = ({ history }) => {
       <div className="user">
         <i className="fas fa-user-plus"></i>
       </div>
-      {/* <form onSubmit={handleRegister} onClick={onCreate}>       */}
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegister} onClick={onCreate}>
+        {/* <form onSubmit={handleRegister}> */}
         <div className="inputfields">
           <label>
             <i className="fas fa-envelope"></i>
@@ -55,7 +46,7 @@ const Register = ({ history }) => {
               name="email"
               type="email"
               placeholder="Enter Email"
-              // onChange={(e) => setNewUser(e.target.value)}
+              onChange={(e) => setNewUser(e.target.value)}
             />
           </label>
         </div>
