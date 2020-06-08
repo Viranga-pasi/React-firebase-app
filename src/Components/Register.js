@@ -23,12 +23,27 @@ const Register = ({ history }) => {
     [history]
   );
 
+  const [user, setUser] = useState([]);
   const [newUser, setNewUser] = useState([]);
 
-  console.log(newUser);
+  useEffect(() => {
+    const fetchData = async () => {
+      const userdb = firebase.firestore();
+      const data = await userdb.collection("user_details").get();
+      setUser(data.docs.map((doc) => doc.data()));
+    };
+    fetchData();
+  }, []);
+
+  // console.log(user);
+  // const userEmail = user.map((q) => q.email);
+  console.log(user);
   function onCreate() {
     const db = firebase.firestore();
     db.collection("user_details").add({ email: newUser });
+    db.collection("user_details")
+      .doc(user.id)
+      .add({ ...user, attempt1: null, attempt2: null, attmpt3: null });
   }
 
   return (
@@ -37,7 +52,7 @@ const Register = ({ history }) => {
       <div className="user">
         <i className="fas fa-user-plus"></i>
       </div>
-      <form onSubmit={handleRegister} onClick={onCreate}>
+      <form onSubmit={handleRegister}>
         {/* <form onSubmit={handleRegister}> */}
         <div className="inputfields">
           <label>
@@ -62,7 +77,7 @@ const Register = ({ history }) => {
           </label>
         </div>
 
-        <button type="submit" className="regbtn">
+        <button type="submit" className="regbtn" onClick={onCreate}>
           REGISTER
         </button>
         <p>
