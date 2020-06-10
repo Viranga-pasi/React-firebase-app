@@ -19,9 +19,9 @@ const Register = ({ history }) => {
         const db = firebase.firestore();
         db.collection("user_details").add({
           email: email.value,
-          attempt1: null,
-          attempt2: null,
-          attempt3: null,
+          attempt1: "",
+          attempt2: "",
+          attempt3: "",
         });
       } catch (error) {
         alert(error);

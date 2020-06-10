@@ -10,7 +10,9 @@ const Homepage = () => {
     //console.log("logout");
   }
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
+  if (currentUser) {
+    // console.log(currentUser.email);
+  }
   if (!currentUser) {
     return <Redirect to="/login" />;
   }
@@ -19,11 +21,12 @@ const Homepage = () => {
     <div>
       <div className="navbar">
         <h1 className="heading">Question App with react + Firebase</h1>
+
         <button onClick={() => logout()} className="hbtn">
           Sign Out
         </button>
       </div>
-      <Quiz />
+      <Quiz currentUser={currentUser.email} />
     </div>
   );
 };

@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import firebase from "../firebase";
 import Progress from "./Quiz/Progress";
 import Questions from "./Quiz/Questions";
 import Answers from "./Quiz/Answers";
 import "./assets.css";
+import { AuthContext } from "./Auth.js";
 import FinalScore from "./Quiz/FinalScore";
-const Quiz = () => {
+import { functions } from "firebase";
+
+const Quiz = (props) => {
   const [qdata, setQdata] = useState([]);
-  // console.log(qdata.length);
+  // console.log("questions", qdata);
   useEffect(() => {
     const fetchData = async () => {
       const db = firebase.firestore();
@@ -17,6 +20,41 @@ const Quiz = () => {
     };
     fetchData();
   }, []);
+
+  //get user details from uerDatabase
+
+  const [user, setUser] = useState([]);
+  // console.log("User", user);
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = firebase.firestore();
+      const data = await db.collection("user_details").get();
+
+      setUser(data.docs.map((doc) => doc.data()));
+    };
+    fetchData();
+  }, []);
+
+  const [userEmail, setUserEmail] = useState([]);
+
+  const userDetails = {
+    email: user.map((u) => u.email),
+    attempt1: user.map((u) => u.attempt1),
+    attempt2: user.map((u) => u.attempt2),
+    attempt3: user.map((u) => u.attempt3),
+  };
+
+  // console.log(userDetails);
+  const { currentUser } = useContext(AuthContext);
+  // const [userIndex, setUserIndex] = useState(null);
+  let userIndex = null;
+  for (let i = 0; i < user.length; i++) {
+    if (userDetails.email[i] === currentUser.email) {
+      userIndex = i;
+    }
+  }
+
+  // console.log(userDetails.attempt3[userIndex]);
 
   const [currentQuestion, serCurrentQuestion] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -38,7 +76,7 @@ const Quiz = () => {
   };
 
   const question = questionArray.question[currentQuestion];
-  // console.log(questionArray.correct_answer);
+  // console.log(questionArray);
   //answer click event
   const handleClick = (e) => {
     setCurrentAnswer(e.target.value);
@@ -89,7 +127,7 @@ const Quiz = () => {
   const checkAttempt = () => {
     const attempCount = {
       attemptId: i + 1,
-      attempScore: score,
+      attemptScore: score,
     };
     attempt.push(attempCount);
     setAttempt(attempt);
@@ -100,16 +138,13 @@ const Quiz = () => {
   }, [i]);
   //restart function
   const restart = () => {
-    if (attempt.length === 3) {
-      console.log("Chances are over");
-    }
     setAnswers([]);
     setCurrentAnswer([]);
     serCurrentQuestion(0);
     setShowResult(false);
     setScore(0);
     checkAttempt();
-    console.log(attempt);
+    // console.log(attempt);
   };
 
   // check user response
@@ -131,14 +166,15 @@ const Quiz = () => {
         <button
           className="btn btn-primary"
           onClick={restart}
-          disabled={attempt.length === 3}
+          // disabled={attempt.length === 3}
         >
           Restart
         </button>
       </div>
     );
   }
-  if (attempt.length === 3) {
+  //limit the user attempt
+  if (userDetails.attempt3[userIndex]) {
     return (
       <div className="container">
         <h2>Chances are over</h2>
@@ -148,6 +184,7 @@ const Quiz = () => {
   } else {
     return (
       <div className="container">
+        <h3>Welcome {props.currentUser}</h3>
         <Progress total={qdata.length} current={currentQuestion + 1} />
         <hr />
         <Questions question={question} />
