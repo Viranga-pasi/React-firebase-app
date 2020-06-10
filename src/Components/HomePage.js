@@ -10,7 +10,7 @@ const Homepage = () => {
     //console.log("logout");
   }
   const { currentUser } = useContext(AuthContext);
-
+  console.log(currentUser);
   if (!currentUser) {
     return <Redirect to="/login" />;
   }

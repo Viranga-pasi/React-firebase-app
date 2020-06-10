@@ -23,7 +23,7 @@ const Quiz = () => {
   const [answers, setAnswers] = useState([]);
   const [error, setError] = useState("");
   const [showResult, setShowResult] = useState(false);
-  const [attempt, setAttempt] = useState(0);
+  const [attempt, setAttempt] = useState([]);
   const [score, setScore] = useState(0);
 
   //get database to an object
@@ -46,18 +46,21 @@ const Quiz = () => {
   };
 
   //result check
-  let count = 1;
+  let count = 0;
   const countResult = (dbAnswer, userAnswer) => {
     if (dbAnswer === userAnswer) {
       // console.log("array: ", dbAnswer);
       // console.log("user :", userAnswer);
-      count = +1;
-
-      // console.log("count : ", count);
+      setScore((count) => count + 1);
     }
-    setScore(count);
+
     // console.log("score : ", score);
   };
+  useEffect(() => {
+    // console.log("count : ", count);
+  }, [count]);
+
+  // setScore(count);
   //create  next function
   const next = () => {
     const answer = {
@@ -82,14 +85,31 @@ const Quiz = () => {
 
     setShowResult(true);
   };
-
+  const [i, setI] = useState(0);
+  const checkAttempt = () => {
+    const attempCount = {
+      attemptId: i + 1,
+      attempScore: score,
+    };
+    attempt.push(attempCount);
+    setAttempt(attempt);
+    setI((i) => i + 1);
+  };
+  useEffect(() => {
+    // console.log("count : ", count);
+  }, [i]);
   //restart function
   const restart = () => {
+    if (attempt.length === 3) {
+      console.log("Chances are over");
+    }
     setAnswers([]);
     setCurrentAnswer([]);
     serCurrentQuestion(0);
     setShowResult(false);
     setScore(0);
+    checkAttempt();
+    console.log(attempt);
   };
 
   // check user response
@@ -106,10 +126,23 @@ const Quiz = () => {
       <div className="container result">
         <h2>Results</h2>
         <hr />
-        <FinalScore score={score} />
-        <button className="btn btn-primary" onClick={restart}>
+        <h3>Score : {score}</h3>
+
+        <button
+          className="btn btn-primary"
+          onClick={restart}
+          disabled={attempt.length === 3}
+        >
           Restart
         </button>
+      </div>
+    );
+  }
+  if (attempt.length === 3) {
+    return (
+      <div className="container">
+        <h2>Chances are over</h2>
+        <FinalScore attempt={attempt} />
       </div>
     );
   } else {
@@ -132,7 +165,7 @@ const Quiz = () => {
         <button
           className="btn btn-primary"
           onClick={next}
-          // disabled={!currentAnswer}
+          disabled={!currentAnswer}
         >
           Next Question
         </button>

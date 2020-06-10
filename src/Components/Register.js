@@ -16,6 +16,13 @@ const Register = ({ history }) => {
           .auth()
           .createUserWithEmailAndPassword(email.value, password.value);
         history.push("/");
+        const db = firebase.firestore();
+        db.collection("user_details").add({
+          email: email.value,
+          attempt1: null,
+          attempt2: null,
+          attempt3: null,
+        });
       } catch (error) {
         alert(error);
       }
@@ -30,21 +37,31 @@ const Register = ({ history }) => {
     const fetchData = async () => {
       const userdb = firebase.firestore();
       const data = await userdb.collection("user_details").get();
+
       setUser(data.docs.map((doc) => doc.data()));
     };
     fetchData();
   }, []);
 
   // console.log(user);
-  // const userEmail = user.map((q) => q.email);
-  console.log(user);
-  function onCreate() {
-    const db = firebase.firestore();
-    db.collection("user_details").add({ email: newUser });
-    db.collection("user_details")
-      .doc(user.id)
-      .add({ ...user, attempt1: null, attempt2: null, attmpt3: null });
-  }
+
+  // function onCreate() {
+  //   const db = firebase.firestore();
+  //   for (let i = 0; i < userEmail.length; i++) {
+  //     console.log("Databsae :", userEmail[i]);
+  //     console.log("newUser :", newUser);
+  //     if (userEmail[i] === newUser) {
+  //       alert("User Already Exisits");
+  //     } else {
+  //       db.collection("user_details").add({
+  //         email: newUser,
+  //         attempt1: null,
+  //         attempt2: null,
+  //         attempt3: null,
+  //       });
+  //     }
+  //   }
+  // }
 
   return (
     <div className="logincontainer">
@@ -77,7 +94,8 @@ const Register = ({ history }) => {
           </label>
         </div>
 
-        <button type="submit" className="regbtn" onClick={onCreate}>
+        {/* <button type="submit" className="regbtn" onClick={onCreate}> */}
+        <button type="submit" className="regbtn">
           REGISTER
         </button>
         <p>
