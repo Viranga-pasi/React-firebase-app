@@ -6,7 +6,6 @@ import Answers from "./Quiz/Answers";
 import "./assets.css";
 import { AuthContext } from "./Auth.js";
 import FinalScore from "./Quiz/FinalScore";
-import { functions } from "firebase";
 
 const Quiz = (props) => {
   const [qdata, setQdata] = useState([]);
@@ -35,7 +34,7 @@ const Quiz = (props) => {
     fetchData();
   }, []);
 
-  const [userEmail, setUserEmail] = useState([]);
+  // const [userEmail, setUserEmail] = useState([]);
 
   const userDetails = {
     email: user.map((u) => u.email),
@@ -54,7 +53,7 @@ const Quiz = (props) => {
     }
   }
 
-  // console.log(userDetails.attempt3[userIndex]);
+  // console.log(userIndex);
 
   const [currentQuestion, serCurrentQuestion] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -174,11 +173,16 @@ const Quiz = (props) => {
     );
   }
   //limit the user attempt
-  if (userDetails.attempt3[userIndex]) {
+  if (attempt.length === 3 || userDetails.attempt3[userIndex]) {
     return (
       <div className="container">
         <h2>Chances are over</h2>
-        <FinalScore attempt={attempt} />
+        <FinalScore
+          attempt={attempt}
+          userIndex={userIndex}
+          userDetails={userDetails}
+          user={user}
+        />
       </div>
     );
   } else {
