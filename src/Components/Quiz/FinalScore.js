@@ -4,55 +4,46 @@ import firebase from "../../firebase";
 const FinalScore = (props) => {
   // console.log(props.userDetails.email[props.userIndex]);
   let cue = props.userDetails.email[props.userIndex];
-  const userScoreDetails = {
+  const userScore = {
     attempt: props.attempt.map((score) => score.attemptId),
     score: props.attempt.map((score) => score.attemptScore),
   };
-  const [user, setUser] = useState([]);
-  // console.log(userScoreDetails);
+  const [userId, setUserId] = useState([]);
+  // console.log(userScore);
   useEffect(() => {
     const fetchData = async () => {
       const db = firebase.firestore();
       const data = await db.collection("user_details").get();
 
-      setUser(data.docs.map((doc) => doc.id));
+      setUserId(data.docs.map((doc) => doc.id)[props.userIndex]);
     };
     fetchData();
   }, []);
 
-  console.log(user[props.userIndex]);
+  // console.log("current user id", userId);
 
-  let chance1 = null,
-    chance2 = null,
-    chance3 = null;
-  for (let i = 0; i < userScoreDetails.attempt.length; i++) {
-    if (i === 0) {
-      chance1 = userScoreDetails.score[i];
-      props.userDetails.attempt1[props.userIndex] = chance1;
-    }
-    if (i === 1) {
-      chance2 = userScoreDetails.score[i];
-      props.userDetails.attempt2[props.userIndex] = chance1;
-    }
-    if (i === 2) {
-      chance3 = userScoreDetails.score[i];
-      props.userDetails.attempt3[props.userIndex] = chance1;
-    }
-  }
+  var cUser = firebase.auth().currentUser;
+  const updateData = async () => {
+    const db = firebase.firestore();
+    let usersRef = await db.collection("user_details");
+    let { docs } = await usersRef.where("uid", "==", cUser.uid).limit(1).get();
+    const { attempts } = docs[0].data();
+    await db.collection("user_details").doc(docs[0].id).update({
+      attempts: userScore.score,
+    });
+  };
 
-  const db = firebase.firestore();
-  // db.collection("user_details")
-  //   .doc(user[props.userIndex])
-  //   .set(
-  //     ...props.userDetails,
-  //     props.userDetails.attempt1[props.userIndex],
-  //     props.userDetails.attempt2[props.userIndex],
-  //     props.userDetails.attempt3[props.userIndex]
-  //   );
-
-  // console.log(userScoreDetails);
-  // console.log(chance1, chance2, chance3);
-  // console.log(user);
-  return <div></div>;
+  updateData();
+  return (
+    <div>
+      <ul>
+        {props.attempt.map((atmpt) => (
+          <li key={atmpt.attemptId}>
+            Attempt {atmpt.attemptId} : {atmpt.attemptScore}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 export default FinalScore;

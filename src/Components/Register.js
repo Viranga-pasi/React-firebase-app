@@ -18,10 +18,8 @@ const Register = ({ history }) => {
         history.push("/");
         const db = firebase.firestore();
         db.collection("user_details").add({
+          uid: firebase.auth().currentUser.uid,
           email: email.value,
-          attempt1: "",
-          attempt2: "",
-          attempt3: "",
         });
       } catch (error) {
         alert(error);

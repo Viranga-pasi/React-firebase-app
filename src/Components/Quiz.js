@@ -38,12 +38,11 @@ const Quiz = (props) => {
 
   const userDetails = {
     email: user.map((u) => u.email),
-    attempt1: user.map((u) => u.attempt1),
-    attempt2: user.map((u) => u.attempt2),
-    attempt3: user.map((u) => u.attempt3),
+    attempts: user.map((u) => u.attempts),
   };
 
-  // console.log(userDetails);
+  // console.log(userDetails.attempts[0]);
+
   const { currentUser } = useContext(AuthContext);
   // const [userIndex, setUserIndex] = useState(null);
   let userIndex = null;
@@ -52,8 +51,6 @@ const Quiz = (props) => {
       userIndex = i;
     }
   }
-
-  // console.log(userDetails);
 
   const [currentQuestion, serCurrentQuestion] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -160,7 +157,15 @@ const Quiz = (props) => {
       <div className="container result">
         <h2>Results</h2>
         <hr />
-        <h3>Score : {score}</h3>
+        <h3>Current Attempt : {score}</h3>
+        <h4>Previous Score</h4>
+        <ul>
+          {attempt.map((atmpt) => (
+            <li key={atmpt.attemptId}>
+              Attempt {atmpt.attemptId} : {atmpt.attemptScore}
+            </li>
+          ))}
+        </ul>
 
         <button
           className="btn btn-primary"
@@ -173,10 +178,19 @@ const Quiz = (props) => {
     );
   }
   //limit the user attempt
-  if (attempt.length === 3 || userDetails.attempt3[userIndex]) {
+  if (userDetails.attempts[0]) {
     return (
       <div className="container">
-        <h2>Chances are over</h2>
+        <h3>Sorry {props.currentUser}</h3>
+        <h2>Your Chances are over</h2>
+      </div>
+    );
+  }
+  if (attempt.length === 3) {
+    return (
+      <div className="container">
+        <h3>Sorry {props.currentUser}</h3>
+        <h2>Your Attempts exceds</h2>
         <FinalScore
           attempt={attempt}
           userIndex={userIndex}
