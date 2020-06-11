@@ -53,7 +53,7 @@ const Quiz = (props) => {
     }
   }
 
-  // console.log(userIndex);
+  // console.log(userDetails);
 
   const [currentQuestion, serCurrentQuestion] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
