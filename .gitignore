@@ -24,3 +24,4 @@ yarn-error.log*
 
 # add firebase
 src/firebase.js
+config/config.env
