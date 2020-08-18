@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "../firebase";
 import Progress from "./Quiz/Progress";
 import Questions from "./Quiz/Questions";
 import Answers from "./Quiz/Answers";
 import "./assets.css";
-import { AuthContext } from "./Auth.js";
+
 import FinalScore from "./Quiz/FinalScore";
 
 const Quiz = (props) => {
@@ -103,9 +103,9 @@ const Quiz = (props) => {
     };
     answers.push(answer);
     setAnswers(answers);
-    {
-      countResult(questionArray.correct_answer[currentQuestion], currentAnswer);
-    }
+
+    countResult(questionArray.correct_answer[currentQuestion], currentAnswer);
+
     if (!currentAnswer) {
       setError("Please Select an Answer");
       return;

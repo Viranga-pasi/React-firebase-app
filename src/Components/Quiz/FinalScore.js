@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from "react";
-import firebase from "../../firebase";
+import React from "react";
 
 const FinalScore = (props) => {
   // console.log(props.userDetails.email[props.userIndex]);
-
-  const userScore = {
-    attempt: props.attempt.map((score) => score.attemptId),
-    score: props.attempt.map((score) => score.attemptScore),
-  };
 
   return (
     <div>
