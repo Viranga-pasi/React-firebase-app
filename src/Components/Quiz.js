@@ -9,6 +9,9 @@ import FinalScore from "./Quiz/FinalScore";
 
 const Quiz = (props) => {
   const [qdata, setQdata] = useState([]);
+  const [user, setUser] = useState([]);
+  const [userId, setUserId] = useState([]);
+
   // console.log("questions", qdata);
   useEffect(() => {
     const fetchData = async () => {
@@ -16,41 +19,36 @@ const Quiz = (props) => {
       const data = await db.collection("questions_db").get();
 
       setQdata(data.docs.map((doc) => doc.data()));
+      const userData = await db.collection("user_details").get();
+
+      setUser(userData.docs.map((doc) => doc.data()));
+      setUserId(userData.docs.map((doc) => doc.id));
     };
     fetchData();
   }, []);
 
   //get user details from uerDatabase
 
-  const [user, setUser] = useState([]);
-  // console.log("User", user);
-  useEffect(() => {
-    const fetchData = async () => {
-      const db = firebase.firestore();
-      const data = await db.collection("user_details").get();
-
-      setUser(data.docs.map((doc) => doc.data()));
-    };
-    fetchData();
-  }, []);
+  console.log("questions", qdata);
 
   // const [userEmail, setUserEmail] = useState([]);
-
+  const currentUser = firebase.auth().currentUser;
+  // const [userIndex, setUserIndex] = useState(null);
+  // console.log("User", currentUser);
   const userDetails = {
     email: user.map((u) => u.email),
-    attempts: user.map((u) => u.attempts),
+    attempt1: user.map((u) => u.attempt1),
+    attempt2: user.map((u) => u.attempt2),
+    attempt3: user.map((u) => u.attempt3),
+    uid: user.map((u) => u.uid),
   };
-
-  // console.log(userDetails.attempts[0]);
-
-  const { currentUser } = useContext(AuthContext);
-  // const [userIndex, setUserIndex] = useState(null);
   let userIndex = null;
   for (let i = 0; i < user.length; i++) {
-    if (userDetails.email[i] === currentUser.email) {
+    if (userDetails.uid[i] === currentUser.uid) {
       userIndex = i;
     }
   }
+  // console.log(userIndex);
 
   const [currentQuestion, serCurrentQuestion] = useState(0);
   const [currentAnswer, setCurrentAnswer] = useState("");
@@ -70,7 +68,7 @@ const Quiz = (props) => {
     id: qdata.map((q) => q.id),
     correct_answer: qdata.map((q) => q.correct_answer),
   };
-
+  console.log("question", questionArray);
   const question = questionArray.question[currentQuestion];
   // console.log(questionArray);
   //answer click event
@@ -94,6 +92,8 @@ const Quiz = (props) => {
     // console.log("count : ", count);
   }, [count]);
 
+  // console.log(userId[userIndex]);
+  // console.log(userIndex);
   // setScore(count);
   //create  next function
   const next = () => {
@@ -132,6 +132,7 @@ const Quiz = (props) => {
   useEffect(() => {
     // console.log("count : ", count);
   }, [i]);
+
   //restart function
   const restart = () => {
     setAnswers([]);
@@ -140,7 +141,42 @@ const Quiz = (props) => {
     setShowResult(false);
     setScore(0);
     checkAttempt();
-    // console.log(attempt);
+
+    if (userDetails.attempt1[userIndex] === "") {
+      const db = firebase.firestore();
+      db.collection("user_details")
+        .doc(userId[userIndex])
+        .update({ attempt1: score });
+
+      console.log("attempt1 : ", score);
+    } else {
+      if (userDetails.attempt2[userIndex] === "") {
+        const db = firebase.firestore();
+        db.collection("user_details")
+          .doc(userId[userIndex])
+          .update({ attempt2: score });
+
+        console.log("attempt2 : ", score);
+      } else {
+        if (userDetails.attempt3[userIndex] === "") {
+          const db = firebase.firestore();
+          db.collection("user_details")
+            .doc(userId[userIndex])
+            .update({ attempt3: score });
+
+          console.log("attempt3 : ", score);
+        }
+      }
+    }
+
+    const fetchData = async () => {
+      const db = firebase.firestore();
+
+      const userData = await db.collection("user_details").get();
+
+      setUser(userData.docs.map((doc) => doc.data()));
+    };
+    fetchData();
   };
 
   // check user response
@@ -178,11 +214,14 @@ const Quiz = (props) => {
     );
   }
   //limit the user attempt
-  if (userDetails.attempts[0]) {
+  if (userDetails.attempt3[userIndex]) {
     return (
       <div className="container">
-        <h3>Sorry {props.currentUser}</h3>
+        <h3>Sorry {userDetails.email[userIndex]}</h3>
         <h2>Your Chances are over</h2>
+        <h4>Attempt 1 : {userDetails.attempt1[userIndex]}</h4>
+        <h4>Attempt 2 : {userDetails.attempt2[userIndex]}</h4>
+        <h4>Attempt 3 : {userDetails.attempt3[userIndex]}</h4>
       </div>
     );
   }
